@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class Notification {
@@ -26,15 +27,19 @@ class Notification {
 
   NotificationDetails notificationDetails() {
     return const NotificationDetails(
-      android: AndroidNotificationDetails(
-        'daily_channel_id',
-        'Daily Notifications',
-        channelDescription: 'Daily Notification Channal',
-        importance: Importance.max,
-        priority: Priority.high),
-        iOS: DarwinNotificationDetails(
+        android: AndroidNotificationDetails(
+            'daily_channel_id', 'Daily Notifications',
+            channelDescription: 'Daily Notification Channal',
+            importance: Importance.max,
+            priority: Priority.high),
+        iOS: DarwinNotificationDetails());
+  }
 
-        )
-    );
+  Future<void> showNotification({
+    int id = 0,
+    String? Title,
+    String? Body,
+  }) async {
+    return notificationsplugin.show(id, Title, Body, notificationDetails());
   }
 }
