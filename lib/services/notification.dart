@@ -1,45 +1,54 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-class Notification {
-  final notificationsplugin = FlutterLocalNotificationsPlugin();
+class NotificationService {
+  final FlutterLocalNotificationsPlugin _notificationsPlugin =
+      FlutterLocalNotificationsPlugin();
   bool _isInit = false;
+
   bool get isInit => _isInit;
 
   Future<void> initNotification() async {
     if (_isInit) return;
 
-    const initSettingAndriod =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidInitSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    const initSettingIos = DarwinInitializationSettings(
-        requestAlertPermission: true,
-        requestBadgePermission: true,
-        requestSoundPermission: true);
-
-    const initSettings = InitializationSettings(
-      android: initSettingAndriod,
-      iOS: initSettingIos,
+    const iosInitSettings = DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
     );
 
-    await notificationsplugin.initialize(initSettings);
+    const initSettings = InitializationSettings(
+      android: androidInitSettings,
+      iOS: iosInitSettings,
+    );
+
+    await _notificationsPlugin.initialize(initSettings);
+    _isInit = true;
   }
 
-  NotificationDetails notificationDetails() {
+  NotificationDetails _notificationDetails() {
     return const NotificationDetails(
-        android: AndroidNotificationDetails(
-            'daily_channel_id', 'Daily Notifications',
-            channelDescription: 'Daily Notification Channal',
-            importance: Importance.max,
-            priority: Priority.high),
-        iOS: DarwinNotificationDetails());
+      android: AndroidNotificationDetails(
+        'daily_channel_id', 'Daily Notifications',
+        channelDescription: 'Daily Notification Channel',
+        importance: Importance.max,
+        priority: Priority.high,
+      ),
+      iOS: DarwinNotificationDetails(),
+    );
   }
 
   Future<void> showNotification({
     int id = 0,
-    String? Title,
-    String? Body,
+    String? title,
+    String? body,
   }) async {
-    return notificationsplugin.show(id, Title, Body, notificationDetails());
+    return _notificationsPlugin.show(
+      id,
+      title ?? 'Default Title',
+      body ?? 'Default Body',
+      _notificationDetails(),
+    );
   }
 }
