@@ -24,11 +24,17 @@ class Notification {
     await notificationsplugin.initialize(initSettings);
   }
 
-  NotificationDetails notificationDetails{
+  NotificationDetails notificationDetails() {
     return const NotificationDetails(
       android: AndroidNotificationDetails(
         'daily_channel_id',
-        'Daily Notifications')
+        'Daily Notifications',
+        channelDescription: 'Daily Notification Channal',
+        importance: Importance.max,
+        priority: Priority.high),
+        iOS: DarwinNotificationDetails(
+
+        )
     );
   }
 }
